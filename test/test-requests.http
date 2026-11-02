@@ -1,0 +1,19 @@
+# api http test requests for VSCode
+
+### get cats
+GET http://127.0.0.1:3000/api/v1/cats
+
+### get cat by id
+GET http://127.0.0.1:3000/api/v1/cats/1
+
+### post new cat
+POST http://127.0.0.1:3000/api/v1/cats
+Content-Type: application/json
+
+{
+    name: 'Roope',
+    birthdate: '2020-01-01',
+    weight: 4,
+    owner: 'Tiina',
+    image: 'https://placecats.com/320/240',
+}
