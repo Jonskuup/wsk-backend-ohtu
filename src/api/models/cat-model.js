@@ -22,7 +22,7 @@ const cats = [
     birthdate: '2021-11-18',
     weight: 7,
     owner: 'Ulla',
-    image: 'https://placecats.com320/240',
+    image: 'https://placecats.com/320/240',
   },
 ];
 
