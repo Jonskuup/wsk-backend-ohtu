@@ -8,7 +8,16 @@ import {
 
 const getAllCats = (req, res) => {
   //const cats = [{cat_id: 1, name: 'Misu'}];
-  res.json(listAllCats());
+  console.log('Ollaan nyt controllerissa');
+  // res.json(listAllCats());
+  const cats = listAllCats();
+
+  // esimerkki siitä, että middleware on muokannut req-objektia.
+  res.json({
+    message: 'Cats reittiin lisätty aikaleima',
+    time: req.requestTime,
+    data: cats,
+  });
 };
 
 const getCatById = (req, res) => {
@@ -29,8 +38,20 @@ const getCatById = (req, res) => {
 
 const postCat = (req, res) => {
   console.log('request', req.body);
-  const id = addCat(req.body);
-  res.status(201).json({cat_id: id});
+  console.log(req.file);
+  console.log(req.file.filename);
+  //res.json({message: 'Kuva saatu'});
+  req.body.filename = req.file.filename;
+  //const id = addCat(req.body);
+  //res.status(201).json({cat_id: id});
+  const result = addCat(req.body);
+
+  if (result) {
+    res.status(201);
+    res.json({message: 'New cat added.', result});
+  } else {
+    res.sendStatus(400);
+  }
 };
 
 const deleteCat = (req, res) => {
