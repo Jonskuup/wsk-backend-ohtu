@@ -1,3 +1,8 @@
+-- Clear database (for dev only)
+DROP DATABASE IF EXISTS wskcats;
+CREATE DATABASE wskcats;
+USE wskcats;
+
 CREATE TABLE `wsk_cats` (
   `cat_id` int(11) NOT NULL,
   `cat_name` text NOT NULL,

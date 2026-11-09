@@ -11,7 +11,7 @@ GET {{apiUrl}}/cats/8
 ### get cat by id (FAIL: not found)
 GET {{apiUrl}}/cats/98
 
-#cat_name, weight, owner, filename, birthdate
+# cat_name, weight, owner, filename, birthdate
 ### post new cat
 POST {{apiUrl}}/cats
 Content-Type: application/json
@@ -31,34 +31,37 @@ Content-Type: multipart/form-data; boundary=MyBoundary
 --MyBoundary
 Content-Disposition: form-data; name="cat_name"
 
-Misu
+Dogi
 --MyBoundary
 Content-Disposition: form-data; name="weight"
 
-6
+4
 --MyBoundary
 Content-Disposition: form-data; name="owner"
 
-3602
+37
 --MyBoundary
 Content-Disposition: form-data; name="birthdate"
 
-2023-10-08
+2022-10-08
 --MyBoundary
-Content-Disposition: form-data; name="image"; filename="auto.png"
+Content-Disposition: form-data; name="image"; filename="lazypomlogo.png"
 Content-Type: image/png
 
-< ./auto.png
+< ./lazypomlogo.png
 --MyBoundary--
 
 ### edit existing cat
-PUT {{apiUrl}}/cats/8
+PUT {{apiUrl}}/cats/43
 Content-Type: application/json
 
 {
     "weight": 6,
-    "owner": "Uusi omistaja"
+    "cat_name": "Uusi nimi"
 }
 
 ### delete cat by id
-DELETE {{apiUrl}}/cats/8
+DELETE {{apiUrl}}/cats/43
+
+### get cats by user ID
+GET {{apiUrl}}/users/37/cats

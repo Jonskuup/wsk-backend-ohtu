@@ -6,11 +6,12 @@ const createThumbnail = async (req, res, next) => {
     return;
   }
   console.log(
-    'Tässä välissä äkä tee muuuta kuin tallenna thumbnail ja sitten next (async / await)'
+    'Tässä välissä älä tee muuta kuin tallenna thumbnail ja sitten next (async / await)'
   );
   console.log(req.file.path);
   // TODO: use file path to create 160x160 png thumbnail with sharp
-  //käytä sharp ja generoikaa sharpin avulla teee sharp(input) .resize(200,300, {})...
+
+  next();
 };
 
 export {createThumbnail};
