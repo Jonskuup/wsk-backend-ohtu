@@ -43,6 +43,7 @@ const postCat = async (req, res) => {
   console.log(req.file);
   console.log(req.file.filename);
   req.body.filename = req.file.filename;
+  req.body.owner = res.locals.user.user_id;
 
   const result = await addCat(req.body);
   if (result) {
@@ -54,7 +55,11 @@ const postCat = async (req, res) => {
 };
 
 const deleteCat = async (req, res) => {
-  const result = await removeCat(Number(req.params.id));
+  const id = Number(req.params.id);
+  const user = res.locals.user;
+  console.log('user', user);
+
+  const result = await removeCat(id, user);
   if (result) {
     res.json({message: 'Cat removed!'});
   } else {
@@ -64,12 +69,17 @@ const deleteCat = async (req, res) => {
 
 const putCat = async (req, res) => {
   // in real life, all input data (req.body) should be validated before using it
-  const result = await modifyCat(Number(req.params.id), req.body);
-  if (result) {
-    res.json({message: 'Cat updated!'});
-  } else {
-    res.status(404).json({error: 404, message: 'Not found.'});
+  const user = res.locals.user;
+
+  // Tavallinen käyttäjä ei voi vaihtaa kissan omistajaa
+  if (user.role !== 'admin') {
+    delete req.body.owner;
   }
+
+  const result = await modifyCat(Number(req.params.id), req.body, user);
+
+  if (result) res.json({message: 'Cat updated!'});
+  else res.status(404).json({error: 404, message: 'Not found.'});
 };
 
 export {getAllCats, getCatById, getCatsByUserId, postCat, deleteCat, putCat};

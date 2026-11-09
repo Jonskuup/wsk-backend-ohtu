@@ -24,6 +24,22 @@ const addUser = async (user) => {
   return {user_id: result.insertId};
 };
 
+const modifyUser = async (id, user) => {
+  const {name, username, email} = user;
+
+  const sql = `
+    UPDATE wsk_users
+    SET name = ?, username = ?, email = ?
+    WHERE user_id = ?
+  `;
+
+  const params = [name, username, email, id];
+
+  const [result] = await promisePool.execute(sql, params);
+
+  return result.affectedRows > 0;
+};
+
 const deleteUser = async (id) => {
   // Aloitetaan tietokantatransaktio
   const connection = await promisePool.getConnection();
@@ -58,4 +74,4 @@ const deleteUser = async (id) => {
   }
 };
 
-export {findUserByUsername, addUser, deleteUser};
+export {findUserByUsername, addUser, deleteUser, modifyUser};

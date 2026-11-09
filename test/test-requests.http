@@ -1,9 +1,9 @@
 # api http test requests for VSCode
 @apiUrl = http://127.0.0.1:3000/api/v1
 
-
 ### get cats
 GET {{apiUrl}}/cats
+Authorization: Bearer {{login.response.body.token}}
 
 ### get cat by id
 GET {{apiUrl}}/cats/8
@@ -14,6 +14,7 @@ GET {{apiUrl}}/cats/98
 # cat_name, weight, owner, filename, birthdate
 ### post new cat
 POST {{apiUrl}}/cats
+Authorization: Bearer {{login.response.body.token}}
 Content-Type: application/json
 
 {
@@ -27,6 +28,7 @@ Content-Type: application/json
 ### post cat WITH IMAGE
 POST http://127.0.0.1:3000/api/v1/cats HTTP/1.1
 Content-Type: multipart/form-data; boundary=MyBoundary
+Authorization: Bearer {{login.response.body.token}}
 
 --MyBoundary
 Content-Disposition: form-data; name="cat_name"
@@ -36,10 +38,6 @@ Dogi
 Content-Disposition: form-data; name="weight"
 
 4
---MyBoundary
-Content-Disposition: form-data; name="owner"
-
-37
 --MyBoundary
 Content-Disposition: form-data; name="birthdate"
 
@@ -52,7 +50,8 @@ Content-Type: image/png
 --MyBoundary--
 
 ### edit existing cat
-PUT {{apiUrl}}/cats/43
+PUT {{apiUrl}}/cats/48
+Authorization: Bearer {{login.response.body.token}}
 Content-Type: application/json
 
 {
@@ -61,7 +60,65 @@ Content-Type: application/json
 }
 
 ### delete cat by id
-DELETE {{apiUrl}}/cats/43
+DELETE {{apiUrl}}/cats/48
+Authorization: Bearer {{login.response.body.token}}
 
-### get cats by user ID
-GET {{apiUrl}}/users/37/cats
+## /users resource
+### Register new user
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Johanna",
+    "username": "johanna",
+    "email": "johanna@example.com",
+    "password": "salasana"
+}
+
+## /auth resource
+### User login
+# @name login
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "johanna",
+    "password": "salasana"
+}
+
+### Get my user info
+GET http://localhost:3000/api/v1/auth/me
+Authorization: Bearer {{login.response.body.token}}
+
+### delete cat by id
+DELETE {{apiUrl}}/cats/60
+Authorization: Bearer {{login.response.body.token}}
+
+### Update own cat
+PUT {{apiUrl}}/cats/41
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "cat_name": "Siiri test",
+  "weight": 4
+}
+
+### Get Johanna's cats
+GET {{apiUrl}}/users/38/cats
+Authorization: Bearer {{login.response.body.token}}
+
+### Try to update another user's information (should fail)
+PUT {{apiUrl}}/users/37
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "name": "Test",
+    "username": "test",
+    "email": "test@example.com"
+}
+
+### Try to delete another user (should fail)
+DELETE {{apiUrl}}/users/37
+Authorization: Bearer {{login.response.body.token}}
