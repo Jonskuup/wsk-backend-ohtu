@@ -49,6 +49,25 @@ Content-Type: image/png
 < ./lazypomlogo.png
 --MyBoundary--
 
+### post cat MISSING FILE for error testing
+POST {{apiUrl}}/cats
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="cat_name"
+
+Dogi
+--MyBoundary
+Content-Disposition: form-data; name="weight"
+
+4
+--MyBoundary
+Content-Disposition: form-data; name="birthdate"
+
+2022-10-08
+--MyBoundary--
+
 ### edit existing cat
 PUT {{apiUrl}}/cats/48
 Authorization: Bearer {{login.response.body.token}}
@@ -122,3 +141,60 @@ Content-Type: application/json
 ### Try to delete another user (should fail)
 DELETE {{apiUrl}}/users/37
 Authorization: Bearer {{login.response.body.token}}
+
+### Olematon reitti
+GET http://localhost:3000/ei-ole-olemassa
+
+### Register user with invalid data
+POST {{apiUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "Jo",
+    "username": "ab",
+    "email": "not-an-email",
+    "password": "123"
+}
+
+### Try to update own user with invalid username
+PUT {{apiUrl}}/users/38
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "username": "ab"
+}
+
+### Invalid cat ID
+GET {{apiUrl}}/cats/abc
+
+### Invalid user ID
+GET {{apiUrl}}/users/abc/cats
+Authorization: Bearer {{login.response.body.token}}
+
+### Update cat with empty name
+PUT {{apiUrl}}/cats/41
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+    "cat_name": ""
+}
+
+### Login with empty username
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "",
+    "password": "salasana"
+}
+
+### Login with empty password
+POST {{apiUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "johanna",
+    "password": "Vääräsaalsana"
+}

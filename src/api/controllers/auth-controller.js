@@ -3,19 +3,21 @@ import bcrypt from 'bcrypt';
 import {findUserByUsername} from '../models/user-model.js';
 import 'dotenv/config';
 
-const postLogin = async (req, res) => {
+const postLogin = async (req, res, next) => {
   console.log('postLogin', req.body);
 
   const user = await findUserByUsername(req.body.username);
   if (!user) {
-    res.sendStatus(401);
-    return;
+    const error = new Error('Invalid username or password.');
+    error.status = 401;
+    return next(error);
   }
 
   const passwordMatch = await bcrypt.compare(req.body.password, user.password);
   if (!passwordMatch) {
-    res.sendStatus(401);
-    return;
+    const error = new Error('Invalid username or password.');
+    error.status = 401;
+    return next(error);
   }
 
   const userWithNoPassword = {
@@ -32,12 +34,14 @@ const postLogin = async (req, res) => {
   res.json({user: userWithNoPassword, token});
 };
 
-const getMe = async (req, res) => {
+const getMe = async (req, res, next) => {
   console.log('getMe', res.locals.user);
   if (res.locals.user) {
     res.json({message: 'token ok', user: res.locals.user});
   } else {
-    res.sendStatus(401);
+    const error = new Error('Unauthorized.');
+    error.status = 401;
+    return next(error);
   }
 };
 
